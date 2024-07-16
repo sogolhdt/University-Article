@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
+    Route::patch('articles/{article}/deactivate', [ArticleController::class, 'deactivate'])->name('articles.deactivate');
 });
 Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
 require __DIR__ . '/auth.php';
