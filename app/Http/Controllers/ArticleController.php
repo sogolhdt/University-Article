@@ -9,84 +9,54 @@ use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $article = new Article();
-        $articles = $article->getArticlesListWithSearch($request);
+        $articles = Article::withSearch($request)->active()->get();
         return view('articles.index', compact('articles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('articles.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
         ]);
-        $articleData = [
-            'title' => $request['title'],
-            'body' => $request['body'],
-        ];
-        Auth::user()->articles()->create($articleData);
+
+        Auth::user()->articles()->create($validated);
 
         return redirect()->route('articles.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Article $article)
     {
         return view('articles.show', compact('article'));
-
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Article $article)
     {
         Gate::authorize('update-article', $article);
         return view('articles.edit', compact('article'));
-
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Article $article)
     {
         Gate::authorize('update-article', $article);
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
         ]);
-        $articleData = [
-            'title' => $request['title'],
-            'body' => $request['body'],
-        ];
-        $article->update($articleData);
+
+        $article->update($validated);
 
         return redirect()->route('articles.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Article $article)
     {
         Gate::authorize('destroy-article', $article);
