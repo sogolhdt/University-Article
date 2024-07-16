@@ -37,8 +37,9 @@
                 <li class="media mb-4 p-3 border rounded">
                     <div class="media-body">
                         <h2 class="mt-0 mb-2">{{ $article->title }}</h2>
-                        <p>{{ $article->body }}</p>
+
                         <p><strong>By {{ $article->user->name }}</strong></p>
+                        <a href="{{ route('articles.show', $article) }}" class="btn btn-info m-2">open</a>
                         <div class="d-flex justify-content-start">
                             <a href="{{ route('articles.edit', $article) }}" class="btn btn-success mr-2">Edit</a>
                             <form action="{{ route('articles.destroy', $article) }}" method="POST" class="mr-2">
